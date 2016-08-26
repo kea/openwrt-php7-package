@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=php
-PKG_VERSION:=7.1.0
+PKG_VERSION:=7.0.10
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Manuel Kea Baldassarri <manuel@baldassarri.me>
@@ -35,7 +35,7 @@ PHP7_MODULES = \
 	iconv \
 	json \
 	ldap \
-	mbstring mcrypt mysqlnd mysqli \
+	mbstring mcrypt mysqli \
 	opcache openssl \
 	pcntl pdo pdo-mysql pdo-pgsql pdo-sqlite pgsql \
 	session shmop simplexml soap sockets sqlite3 sysvmsg sysvsem sysvshm \
@@ -109,6 +109,7 @@ endef
 define Package/php7-cgi
   $(call Package/php7/Default)
   TITLE+= (CGI & FastCGI)
+  DEPENDS+= +libopenssl
 endef
 
 define Package/php7-cgi/description
@@ -261,10 +262,6 @@ ifneq ($(SDK)$(CONFIG_PACKAGE_php7-mod-mcrypt),)
   CONFIGURE_ARGS+=  --with-mcrypt=shared,"$(STAGING_DIR)/usr"
 else
   CONFIGURE_ARGS+= --without-mcrypt
-endif
-
-ifneq ($(SDK)$(CONFIG_PACKAGE_php7-mod-mysqlnd),)
-  CONFIGURE_ARGS+= --enable-mysqlnd
 endif
 
 ifneq ($(SDK)$(CONFIG_PACKAGE_php7-mod-mysqli),)
@@ -545,7 +542,6 @@ $(eval $(call BuildModule,json,JSON))
 $(eval $(call BuildModule,ldap,LDAP,+PACKAGE_php7-mod-ldap:libopenldap +PACKAGE_php7-mod-ldap:libsasl2))
 $(eval $(call BuildModule,mbstring,MBString))
 $(eval $(call BuildModule,mcrypt,Mcrypt,+PACKAGE_php7-mod-mcrypt:libmcrypt +PACKAGE_php7-mod-mcrypt:libltdl))
-$(eval $(call BuildModule,mysqlnd,MySQL Native Driver,+PACKAGE_php7-mod-mysqlnd:libmysqlclient))
 $(eval $(call BuildModule,mysqli,MySQL Improved Extension,+PACKAGE_php7-mod-mysqli:libmysqlclient))
 $(eval $(call BuildModule,opcache,OPcache,,zend))
 $(eval $(call BuildModule,openssl,OpenSSL,+PACKAGE_php7-mod-openssl:libopenssl))
