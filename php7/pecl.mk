@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-define Package/php5-pecl/Default
+define Package/php7-pecl/Default
   SUBMENU:=PHP
   SECTION:=lang
   CATEGORY:=Languages
