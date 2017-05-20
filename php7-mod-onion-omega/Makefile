@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2016 Kea
+# Copyright (C) 2016-2017 Kea
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=php7-mod-onion-omega
-PKG_VERSION:=0.1
+PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Manuel Kea Baldassarri <manuel@baldassarri.me>
@@ -16,27 +16,32 @@ PKG_MAINTAINER:=Manuel Kea Baldassarri <manuel@baldassarri.me>
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=LICENSE-GPLv2
 
-PKG_SOURCE:=master.zip
+PKG_SOURCE:=v0.2.0.zip
 PKG_BUILD_DIR:=$(BUILD_DIR)/Onion-Omega-Php-extension-master
 PKG_SOURCE_URL:=https://github.com/kea/Onion-Omega-Php-extension/archive/
-PKG_MD5SUM:=6316d6a42fc0333b9699fbada946eea0
+PKG_MD5SUM:=d41d8cd98f00b204e9800998ecf8427e
 
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
+include $(INCLUDE_DIR)/autotools.mk
 
 define Build/Prepare
 	$(Build/Prepare/Default)
-	( cd $(PKG_BUILD_DIR)/$(MAKE_PATH); $(STAGING_DIR_HOST)/usr/bin/phpize; rm aclocal.m4 && aclocal && autoconf )
+	( cd $(PKG_BUILD_DIR)/$(MAKE_PATH); $(STAGING_DIR)/usr/bin/phpize7; rm -f aclocal.m4 )
+	$(autoreconf_target)
 endef
 
 CONFIGURE_VARS+= \
-	OMEGA_DIR=$(STAGING_DIR_HOST)/usr/
+        ac_cv_c_bigendian_php=$(if $(CONFIG_BIG_ENDIAN),yes,no)
+
+CONFIGURE_VARS+= \
+	OMEGA_DIR=$(STAGING_DIR)/usr/
 
 CONFIGURE_ARGS+= \
-	--with-php-config=$(STAGING_DIR_HOST)/usr/bin/php-config
+	--with-php-config=$(STAGING_DIR)/usr/bin/php7-config
 
 define Package/php7-mod-onion-omega
 	SUBMENU:=PHP
