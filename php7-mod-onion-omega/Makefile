@@ -16,10 +16,10 @@ PKG_MAINTAINER:=Manuel Kea Baldassarri <manuel@baldassarri.me>
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=LICENSE-GPLv2
 
-PKG_SOURCE:=v0.2.0.zip
-PKG_BUILD_DIR:=$(BUILD_DIR)/Onion-Omega-Php-extension-master
+PKG_SOURCE:=v$(PKG_VERSION).zip
+PKG_BUILD_DIR:=$(BUILD_DIR)/Onion-Omega-Php-extension-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/kea/Onion-Omega-Php-extension/archive/
-PKG_MD5SUM:=d41d8cd98f00b204e9800998ecf8427e
+PKG_MD5SUM:=f408d272b4825ce921c2306fa4bc3af1
 
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0

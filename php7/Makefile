@@ -484,13 +484,24 @@ define Build/Prepare
 endef
 
 define Build/InstallDev
-	mkdir -p $(PKG_BUILD_DIR)/staging/usr/bin
+	rm -rf $(PKG_BUILD_DIR)/staging
 	make -C $(PKG_BUILD_DIR) install INSTALL_ROOT=$(PKG_BUILD_DIR)/staging
-	rm -f $(PKG_BUILD_DIR)/staging/usr/bin/php
-	$(CP) $(PKG_BUILD_DIR)/staging/* $(STAGING_DIR_HOST)
-	sed -i -e "s#prefix='/usr'#prefix='$(STAGING_DIR_HOST)/usr'#" $(STAGING_DIR_HOST)/usr/bin/phpize
-	sed -i -e "s#exec_prefix=\"\`eval echo /usr\`\"#exec_prefix='$(STAGING_DIR_HOST)/usr'#" $(STAGING_DIR_HOST)/usr/bin/phpize
-	sed -i -e "s#prefix=\"/usr\"#prefix=\"$(STAGING_DIR_HOST)/usr\"#" $(STAGING_DIR_HOST)/usr/bin/php-config
+	rm -rf $(PKG_BUILD_DIR)/staging/usr/{share,man,sbin}
+	rm -f $(PKG_BUILD_DIR)/staging/usr/bin/{php,php-cgi,php-cli}
+	mv $(PKG_BUILD_DIR)/staging/usr/bin/phpize $(PKG_BUILD_DIR)/staging/usr/bin/phpize7
+	mv $(PKG_BUILD_DIR)/staging/usr/bin/php-config $(PKG_BUILD_DIR)/staging/usr/bin/php7-config
+	mv $(PKG_BUILD_DIR)/staging/usr/include/php $(PKG_BUILD_DIR)/staging/usr/include/php7
+	mv $(PKG_BUILD_DIR)/staging/usr/lib/php $(PKG_BUILD_DIR)/staging/usr/lib/php7
+
+	$(CP) $(PKG_BUILD_DIR)/staging/usr $(STAGING_DIR)/
+
+	sed -i -e "s#prefix='/usr'#prefix='$(STAGING_DIR)/usr'#" $(STAGING_DIR)/usr/bin/phpize7
+	sed -i -e "s#exec_prefix=\"\`eval echo /usr\`\"#exec_prefix='$(STAGING_DIR)/usr'#" $(STAGING_DIR)/usr/bin/phpize7
+	sed -i -e "s#/include\`/php\"#/include\`/php7\"#" $(STAGING_DIR)/usr/bin/phpize7
+	sed -i -e "s#/lib/php\`/build\"#/lib/php7\`/build\"#" $(STAGING_DIR)/usr/bin/phpize7
+
+	sed -i -e "s#prefix=\"/usr\"#prefix=\"$(STAGING_DIR)/usr\"#" $(STAGING_DIR)/usr/bin/php7-config
+	sed -i -e "s#/include/php\"#/include/php7\"#" $(STAGING_DIR)/usr/bin/php7-config
 endef
 
 define BuildModule
